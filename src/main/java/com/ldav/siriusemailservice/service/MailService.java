@@ -35,7 +35,9 @@ public class MailService {
         }
 
         var mailer = mailSenderFactory.getNextAvailable();
-        return mailer.sendSimpleEmail(request);
+        var response = mailer.sendSimpleEmail(request);
+        mailCounter.incrementCounterFor(userDetails.getUsername());
+        return response;
     }
 
 }
