@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -45,10 +46,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
         var fieldErrors = ex.getBindingResult().getFieldErrors();
         body.setProperty("errors", fieldErrors.stream()
-                .collect(Collectors.toMap(
+                .collect(Collectors.groupingBy(
                         FieldError::getField,
-                        DefaultMessageSourceResolvable::getDefaultMessage
-                ))
+                        Collectors.mapping(DefaultMessageSourceResolvable::getDefaultMessage, Collectors.toList()))
+                )
         );
 
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
