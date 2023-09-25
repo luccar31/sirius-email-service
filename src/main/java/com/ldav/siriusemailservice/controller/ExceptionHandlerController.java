@@ -1,5 +1,6 @@
 package com.ldav.siriusemailservice.controller;
 
+import com.ldav.siriusemailservice.exception.MailLimitReachedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -53,4 +54,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body, headers, HttpStatus.BAD_REQUEST, request);
     }
 
+    @ExceptionHandler(MailLimitReachedException.class)
+    public ResponseEntity<?> handleMailLimitReachedException(MailLimitReachedException ex, WebRequest request) {
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, "Daily limit for sending emails has been reached. Try tomorrow!");
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
 }
