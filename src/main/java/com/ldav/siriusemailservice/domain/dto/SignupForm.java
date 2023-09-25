@@ -17,6 +17,6 @@ public class SignupForm {
     @NotNull(message = "Password must be present")
     @NotBlank(message = "Password must contain something other than whitespace characters")
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-    message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character, and be at least 8 characters long")
+    message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (#?!@$%^&*-), and be at least 8 characters long")
     private String password;
 }
