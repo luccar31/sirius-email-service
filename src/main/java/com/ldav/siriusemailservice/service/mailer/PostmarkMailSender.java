@@ -15,10 +15,12 @@ import com.postmarkapp.postmark.client.exception.PostmarkException;
 import com.postmarkapp.postmark.client.exception.TimeoutException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(2)
 @RequiredArgsConstructor
 public class PostmarkMailSender extends AbstractApiMailSender<Message, MessageResponse> {
 
@@ -84,6 +86,6 @@ public class PostmarkMailSender extends AbstractApiMailSender<Message, MessageRe
             toThrow = new ApiServerException("Error with Postmark server", e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return toThrow;
+        return toThrow != null ? toThrow : new MailSenderException(e);
     }
 }

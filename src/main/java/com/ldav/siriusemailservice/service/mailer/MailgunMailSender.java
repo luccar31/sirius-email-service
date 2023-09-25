@@ -10,11 +10,13 @@ import com.mailgun.model.message.Message;
 import com.mailgun.model.message.MessageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(3)
 @RequiredArgsConstructor
-public class MailgunApiMailSender extends AbstractApiMailSender<Message, MessageResponse> {
+public class MailgunMailSender extends AbstractApiMailSender<Message, MessageResponse> {
 
     private final MailgunMessagesApi api;
 
@@ -28,14 +30,21 @@ public class MailgunApiMailSender extends AbstractApiMailSender<Message, Message
 
     @Override
     protected Message prepareEmail(MailRequestInfo request) {
-        return Message.builder()
+        var message = Message.builder()
                 .from(from)
                 .to(request.getTo())
-                .bcc(request.getBcc())
-                .cc(request.getCc())
                 .subject(request.getSubject() == null ? "" : request.getSubject())
-                .text(request.getText())
-                .build();
+                .text(request.getText());
+
+        if(request.getBcc() != null){
+            message.bcc(request.getBcc());
+        }
+
+        if(request.getCc() != null){
+            message.cc(request.getCc());
+        }
+
+        return message.build();
     }
 
     protected MailResponseInfo getEmailDetails(MessageResponse response){

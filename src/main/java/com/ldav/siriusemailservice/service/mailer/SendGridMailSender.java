@@ -13,12 +13,14 @@ import com.sendgrid.helpers.mail.objects.Email;
 import com.sendgrid.helpers.mail.objects.Personalization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class SendGridMailSender extends AbstractApiMailSender<Request, Response> {
 
@@ -62,7 +64,7 @@ public class SendGridMailSender extends AbstractApiMailSender<Request, Response>
         var mail = new Mail();
         mail.setFrom(new Email(from));
         mail.addPersonalization(personalization);
-        mail.addContent(new Content(request.getText(), "text/html"));
+        mail.addContent(new Content("text/html", request.getText()));
         var apiRequest = new Request();
         apiRequest.setMethod(Method.POST);
         apiRequest.setEndpoint("mail/send");
@@ -102,6 +104,6 @@ public class SendGridMailSender extends AbstractApiMailSender<Request, Response>
             toThrow = new ApiServerException("SendGrid email limit reached", e, HttpStatus.TOO_MANY_REQUESTS);
         }
 
-        return toThrow;
+        return toThrow != null ? toThrow : new MailSenderException(e);
     }
 }
