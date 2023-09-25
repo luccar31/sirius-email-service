@@ -1,6 +1,7 @@
 package com.ldav.siriusemailservice.controller;
 
 import com.ldav.siriusemailservice.exception.MailLimitReachedException;
+import com.ldav.siriusemailservice.exception.NotAvailableMailSenderFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -60,5 +61,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         var body = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, "Daily limit for sending emails has been reached. Try tomorrow!");
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(NotAvailableMailSenderFoundException.class)
+    public ResponseEntity<?> handleNotAvailableMailSenderFoundException(NotAvailableMailSenderFoundException ex, WebRequest request){
+        var body = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "No sending email provider found for this request");
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 }

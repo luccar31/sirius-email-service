@@ -1,5 +1,6 @@
 package com.ldav.siriusemailservice.controller;
 
+import com.ldav.siriusemailservice.controller.documentation.MailsApi;
 import com.ldav.siriusemailservice.domain.dto.MailRequestInfo;
 import com.ldav.siriusemailservice.domain.dto.MailResponseInfo;
 import com.ldav.siriusemailservice.service.MailService;
@@ -13,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class MailController {
+public class MailController implements MailsApi {
 
     private final MailService mailService;
 
-    @PostMapping(value = "/emails", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MailResponseInfo> sendMail(@RequestBody @Valid MailRequestInfo emailInfo){
+    public ResponseEntity<MailResponseInfo> sendMail(MailRequestInfo emailInfo){
         return ResponseEntity.ok(mailService.sendMail(emailInfo));
     }
 

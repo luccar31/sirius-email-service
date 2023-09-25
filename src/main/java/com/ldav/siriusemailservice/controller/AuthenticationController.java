@@ -1,5 +1,6 @@
 package com.ldav.siriusemailservice.controller;
 
+import com.ldav.siriusemailservice.controller.documentation.AuthenticacionApi;
 import com.ldav.siriusemailservice.domain.dto.LoginRequest;
 import com.ldav.siriusemailservice.domain.dto.LoginResponse;
 import com.ldav.siriusemailservice.domain.dto.SignupForm;
@@ -18,23 +19,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping("/auth")
 @Validated
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthenticationController implements AuthenticacionApi {
 
     private final AuthenticationService authenticationService;
-    private final UserService userService;
 
-    @PostMapping(value = "/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request){
+    public ResponseEntity<LoginResponse> login(LoginRequest request){
         return ResponseEntity.ok(authenticationService.login(request));
     }
 
-    @PostMapping(value = "/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupForm form) throws URISyntaxException {
-        var user = userService.create(form);
-        var resourceLocator = new URI("http://localhost:8080/users?" + user.getUsername());
-        return ResponseEntity.created(resourceLocator).build();
-    }
 }

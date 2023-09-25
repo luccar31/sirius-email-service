@@ -1,5 +1,6 @@
 package com.ldav.siriusemailservice.controller;
 
+import com.ldav.siriusemailservice.controller.documentation.StatsApi;
 import com.ldav.siriusemailservice.domain.dto.UserStats;
 import com.ldav.siriusemailservice.service.StatsService;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +12,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class StatsController {
+public class StatsController implements StatsApi {
 
     private final StatsService statsService;
 
-    @GetMapping(value = "/stats")
     public ResponseEntity<List<UserStats>> getStats(){
         return ResponseEntity.ok(statsService.getAllUsersStats());
     }
